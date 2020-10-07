@@ -52,11 +52,11 @@ for i in range(1, num_time):
 
 # Now plot the values from Heun's method
 # Normal plots
-#plt.plot(t, N1, 'r-', label= 'Parent')
-#plt.plot(t, N2, 'b-', label= 'Daughter')
+plt.plot(t, N1, 'r-', label= 'Parent')
+plt.plot(t, N2, 'b-', label= 'Daughter')
 # Semi-log scale plots
-plt.semilogy(t, N1, 'r-', label='Parent') 
-plt.semilogy(t, N2, 'b-', label='Daugheter')
+#plt.semilogy(t, N1, 'r-', label='Parent') 
+#plt.semilogy(t, N2, 'b-', label='Daugheter')
 plt.xlabel("Time")
 plt.ylabel("Number of Nuclei")
 plt.title("Radioactive Decay")
