@@ -18,13 +18,13 @@ def a(v: float, x: float) -> float:
     x for hills"""
     # Going uphill for the first km
     if x <= 1000: 
-        return -0.5*C_D*rho*A*v*v/m + P/(m*v) - g*np.sin(theta*np.pi/180)
+        return -0.5*C_D*rho*A*v*np.abs(v)/m + P/(m*v) - g*np.sin(theta*np.pi/180)
     # Now on flat ground for second km
     elif 1000 <= x <= 2000:
-        return -0.5*C_D*rho*A*v*v/m + P/(m*v)
+        return -0.5*C_D*rho*A*v*np.abs(v)/m + P/(m*v)
     # Now going downhill on third km
     elif 2000 < x <= 3000:
-        return -0.5*C_D*rho*A*v*v/m + P/(m*v) + g*np.sin(theta*np.pi/180)
+        return -0.5*C_D*rho*A*v*np.abs(v)/m + P/(m*v) + g*np.sin(theta*np.pi/180)
 
 # Create some arrays 
 x_c = np.zeros(0) # x calculated
