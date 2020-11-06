@@ -17,16 +17,24 @@ def step_1(f: Callable[..., float], x: float, y: np.array, h: float)\
 
     Returns
     -------
-    - y (1-d array): The vector of derivative values at position x.
+    - y_int (1-d array): The vector of integrated values at position x.
     """
 
+    # Initialize the output vector.
     n = len(y)
-    y[n-1] = f(x, y) * h
+    y_int = np.zeros(n)
 
-    for i in range(2, n):
-        y[n-i] = y[n-i+1] * h
+    # Find dym/dx using the given function, then use it to compute dym-1/dx.
+    y_int[0] = f(x, y) * h
 
-    return y
+    # Starting with dym-1/dx, compute the other values down to y/dx.
+    for i in range(1, n):
+        y_int[i] = y[n-i] * h
+
+    # Reverse the output vector so y/dx is on top.
+    y_int = np.flipud(y_int)
+
+    return y_int
 
 
 def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
@@ -48,13 +56,21 @@ def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
     - y (1-d array): The vector of derivative values at position x.
     """
 
+    # Initialize the output vector.
     n = len(y)
-    y[n-1] = f(x + (h / 2), y + (k1 / 2)) * h
+    y_int = np.zeros(n)
 
-    for i in range(2, n):
-        y[n-i] = (y[n-i+1] + (k1 / 2)) * h
+    # Find dym/dx using the given function, then use it to compute dym-1/dx.
+    y_int[0] = f(x + (h / 2), y + (k1 / 2)) * h
 
-    return y
+    # Starting with dym-1/dx, compute the other values down to y/dx.
+    for i in range(1, n):
+        y_int[i] = (y[n-i] + (k1[n-i] / 2)) * h
+
+    # Reverse the output vector so y/dx is on top.
+    y_int = np.flipud(y_int)
+
+    return y_int
 
 
 def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
@@ -76,13 +92,21 @@ def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
     - y (1-d array): The vector of derivative values at position x.
     """
 
+    # Initialize the output vector.
     n = len(y)
-    y[n-1] = f(x + (h / 2), y + (k2 / 2)) * h
+    y_int = np.zeros(n)
 
-    for i in range(2, n):
-        y[n-i] = (y[n-i+1] + (k2 / 2)) * h
+    # Find dym/dx using the given function, then use it to compute dym-1/dx.
+    y_int[0] = f(x + (h / 2), y + (k2 / 2)) * h
 
-    return y
+    # Starting with dym-1/dx, compute the other values down to y/dx.
+    for i in range(1, n):
+        y_int[i] = (y[n-i] + (k2[n-i] / 2)) * h
+
+    # Reverse the output vector so y/dx is on top.
+    y_int = np.flipud(y_int)
+
+    return y_int
 
 
 def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
@@ -104,13 +128,21 @@ def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
     - y (1-d array): The vector of derivative values at position x.
     """
 
+    # Initialize the output vector.
     n = len(y)
-    y[n-1] = f(x + h, y + k3) * h
+    y_int = np.zeros(n)
 
-    for i in range(2, n):
-        y[n-i] = (y[n-i+1] + k3) * h
+    # Find dym/dx using the given function, then use it to compute dym-1/dx.
+    y_int[0] = f(x + h, y + k3) * h
 
-    return y
+    # Starting with dym-1/dx, compute the other values down to y/dx.
+    for i in range(1, n):
+        y_int[i] = (y[n-i] + k3[n-1]) * h
+
+    # Reverse the output vector so y/dx is on top.
+    y_int = np.flipud(y_int)
+
+    return y_int
 
 
 def Runge_Kutta_4(diff_fun: Callable[..., float],\
