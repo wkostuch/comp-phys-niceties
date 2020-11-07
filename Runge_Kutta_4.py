@@ -2,8 +2,8 @@ import numpy as np
 from typing import Callable, Tuple
 
 
-def step_1(f: Callable[..., float], x: float, y: np.array, h: float)\
-    -> np.array:
+def step_1(f: Callable[..., float], x: float, y: np.array, params: Tuple,\
+    h: float) -> np.array:
     """
     Computes the first step of RK4 for a differential equation with an 
     arbitrary number of derivatives.
@@ -13,6 +13,7 @@ def step_1(f: Callable[..., float], x: float, y: np.array, h: float)\
     - f (function): The equation which RK4 is being used to evaluate.
     - x (float): The x coordinate for which the values are being measured.
     - y (1-d array): A vector of the values of the lower-order derivatives.
+    - params (n-tuple): Any additional parameters of f.
     - h (float): The step size of x.
 
     Returns
@@ -25,7 +26,7 @@ def step_1(f: Callable[..., float], x: float, y: np.array, h: float)\
     y_int = np.zeros(n)
 
     # Find dym/dx using the given function, then use it to compute dym-1/dx.
-    y_int[0] = f(x, y) * h
+    y_int[0] = f(x, y, *params) * h
 
     # Starting with dym-1/dx, compute the other values down to y/dx.
     for i in range(1, n):
@@ -37,8 +38,8 @@ def step_1(f: Callable[..., float], x: float, y: np.array, h: float)\
     return y_int
 
 
-def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
-    k1: np.array) -> np.array:
+def step_2(f: Callable[..., float], x: float, y: np.array, params: Tuple,\
+    h: float, k1: np.array) -> np.array:
     """
     Computes the second step of RK4 for a differential equation with an 
     arbitrary number of derivatives.
@@ -48,6 +49,7 @@ def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
     - f (function): The equation which RK4 is being used to evaluate.
     - x (float): The x coordinate for which the values are being measured.
     - y (1-d array): A vector of the values of the lower-order derivatives.
+    - params (n-tuple): Any additional parameters of f.
     - h (float): The step size of x.
     - k1 (1-d array): A vector containing the values of the previous RK4 step.
 
@@ -61,7 +63,7 @@ def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
     y_int = np.zeros(n)
 
     # Find dym/dx using the given function, then use it to compute dym-1/dx.
-    y_int[0] = f(x + (h / 2), y + (k1 / 2)) * h
+    y_int[0] = f(x + (h / 2), y + (k1 / 2), *params) * h
 
     # Starting with dym-1/dx, compute the other values down to y/dx.
     for i in range(1, n):
@@ -73,8 +75,8 @@ def step_2(f: Callable[..., float], x: float, y: np.array, h: float,\
     return y_int
 
 
-def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
-    k2: np.array) -> np.array:
+def step_3(f: Callable[..., float], x: float, y: np.array, params: Tuple,\
+    h: float, k2: np.array) -> np.array:
     """
     Computes the third step of RK4 for a differential equation with an 
     arbitrary number of derivatives.
@@ -84,6 +86,7 @@ def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
     - f (function): The equation which RK4 is being used to evaluate.
     - x (float): The x coordinate for which the values are being measured.
     - y (1-d array): A vector of the values of the lower-order derivatives.
+    - params (n-tuple): Any additional parameters of f.
     - h (float): The step size of x.
     - k2 (1-d array): A vector containing the values of the previous RK4 step.
 
@@ -97,7 +100,7 @@ def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
     y_int = np.zeros(n)
 
     # Find dym/dx using the given function, then use it to compute dym-1/dx.
-    y_int[0] = f(x + (h / 2), y + (k2 / 2)) * h
+    y_int[0] = f(x + (h / 2), y + (k2 / 2), *params) * h
 
     # Starting with dym-1/dx, compute the other values down to y/dx.
     for i in range(1, n):
@@ -109,8 +112,8 @@ def step_3(f: Callable[..., float], x: float, y: np.array, h: float,\
     return y_int
 
 
-def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
-    k3: np.array) -> np.array:
+def step_4(f: Callable[..., float], x: float, y: np.array, params: Tuple,\
+    h: float, k3: np.array) -> np.array:
     """
     Computes the fourth step of RK4 for a differential equation with an 
     arbitrary number of derivatives.
@@ -120,6 +123,7 @@ def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
     - f (function): The equation which RK4 is being used to evaluate.
     - x (float): The x coordinate for which the values are being measured.
     - y (1-d array): A vector of the values of the lower-order derivatives.
+    - params (n-tuple): Any additional parameters of f.
     - h (float): The step size of x.
     - k3 (1-d array): A vector containing the values of the previous RK4 step.
 
@@ -133,7 +137,7 @@ def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
     y_int = np.zeros(n)
 
     # Find dym/dx using the given function, then use it to compute dym-1/dx.
-    y_int[0] = f(x + h, y + k3) * h
+    y_int[0] = f(x + h, y + k3, *params) * h
 
     # Starting with dym-1/dx, compute the other values down to y/dx.
     for i in range(1, n):
@@ -184,10 +188,10 @@ def Runge_Kutta_4(diff_fun: Callable[..., float],\
     # Numerically compute the differential equation's parameters over the given 
     # range.
     for n in range(1, num_steps):
-        k1 = step_1(diff_fun, x[n-1], y[n-1], dx, *params)
-        k2 = step_2(diff_fun, x[n-1], y[n-1], dx, k1, *params)
-        k3 = step_3(diff_fun, x[n-1], y[n-1], dx, k2, *params)
-        k4 = step_4(diff_fun, x[n-1], y[n-1], dx, k3, *params)
+        k1 = step_1(diff_fun, x[n-1], y[n-1], params, dx)
+        k2 = step_2(diff_fun, x[n-1], y[n-1], params, dx, k1)
+        k3 = step_3(diff_fun, x[n-1], y[n-1], params, dx, k2)
+        k4 = step_4(diff_fun, x[n-1], y[n-1], params, dx, k3)
         y[n] = y[n-1] + ((k1 + (2 * k2) + (2 * k3) + k4) / 6)
 
     return x, y
