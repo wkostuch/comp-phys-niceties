@@ -146,22 +146,23 @@ def step_4(f: Callable[..., float], x: float, y: np.array, h: float,\
 
 
 def Runge_Kutta_4(diff_fun: Callable[..., float],\
-    x_range: Tuple[float, float, float], initial_value: np.array)\
-    -> Tuple[np.array, np.array]:
+    x_range: Tuple[float, float, float], initial_value: np.array,\
+    params: Tuple) -> Tuple[np.array, np.array]:
     """
     Uses the 4th-order Runge-Kutta algorithm to numerically integrate an 
     arbitrary differential function.
 
     Parameters
     ----------
-    - diff_fun (function): A function of the form f(x, Y) that returns the 
-    value of the highest-order derivative, where x is a float passed to the y
-    function and derivatives as y(x), and Y is a vector of values of y(x) and
-    any derivatives before that which f(x, Y) returns.
+    - diff_fun (function): A function of the form f(x, Y, *args) that returns 
+    the value of the highest-order derivative, where x is a float passed to the 
+    y function and derivatives as y(x), and Y is a vector of values of y(x) and
+    any derivatives before that which f(x, Y, *args) returns.
     - x_range (3-tuple): A tuple of the form (min, max, step) for the values 
     over which x will be evaluated.
     - initial_value (1-d array): An array representing a vector of the initial 
     values for the function and its derivatives.
+    - params (n-tuple): A tuple of any additional parameters for diff_fun.
 
     Returns
     -------
@@ -183,10 +184,10 @@ def Runge_Kutta_4(diff_fun: Callable[..., float],\
     # Numerically compute the differential equation's parameters over the given 
     # range.
     for n in range(1, num_steps):
-        k1 = step_1(diff_fun, x[n-1], y[n-1], dx)
-        k2 = step_2(diff_fun, x[n-1], y[n-1], dx, k1)
-        k3 = step_3(diff_fun, x[n-1], y[n-1], dx, k2)
-        k4 = step_4(diff_fun, x[n-1], y[n-1], dx, k3)
+        k1 = step_1(diff_fun, x[n-1], y[n-1], dx, *params)
+        k2 = step_2(diff_fun, x[n-1], y[n-1], dx, k1, *params)
+        k3 = step_3(diff_fun, x[n-1], y[n-1], dx, k2, *params)
+        k4 = step_4(diff_fun, x[n-1], y[n-1], dx, k3, *params)
         y[n] = y[n-1] + ((k1 + (2 * k2) + (2 * k3) + k4) / 6)
 
     return x, y
