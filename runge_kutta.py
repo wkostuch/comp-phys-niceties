@@ -8,15 +8,14 @@ from mpl_toolkits.mplot3d import Axes3D
 def acc(x: float, v: float, t: float) -> float:
     """Acceleration (second derivative) function.
     x-position, velocity, and time"""
-    #return -0.5*v - np.sin(x) + 1.5*np.cos(2.0*t/3)
-    return -0.05*v - 2*x
+    return -0.5*v - np.sin(x) + 1.15*np.cos(2.0*t/3)
+    #return -0.05*v - 2*x 
 
 # Set initial values
 x = -0.75 # Meters
 v = 1.2 # Meters per second
 tc = np.linspace(0, 100, 1000) # 1,000 time values
-h = tc[1] - tc[0]
-print(h)
+h = 0.1
 xc = []
 vc = []
 
@@ -36,6 +35,12 @@ for t in tc:
 
     x = x + (k1x + 2*k2x + 2*k3x + k4x)/6
     v = v + (k1v + 2*k2v + 2*k3v + k4v)/6
+    '''
+    if x > np.pi:
+        x = x - 2*np.pi
+    if x < -np.pi:
+        x = x + 2*np.pi
+    '''
     xc.append(x)
     vc.append(v)
 
